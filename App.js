@@ -5,6 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons"; 
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
+
 import HomeScreen from "./src/screens/HomeScreen";
 import ExploreScreen from "./src/screens/ExploreScreen";
 import ReelsScreen from "./src/screens/ReelsScreen";

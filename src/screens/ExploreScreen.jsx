@@ -32,18 +32,18 @@ const ExploreScreen = () => {
         {chunkedData.map((chunk, index) => {
           if (chunk.length !== 3) return null;
 
-          const patternIndex = index % 3;
+          const patternIndex = index % 4;
 
           if (patternIndex === 0) {
             return (
               <GridRow key={`row_${index}`} items={chunk} reverse={false} />
             );
-          } else if (patternIndex === 1) {
-            return <AllSmallRow key={`row_${index}`} items={chunk} />;
-          } else {
+          } else if (patternIndex === 2) {
             return (
               <GridRow key={`row_${index}`} items={chunk} reverse={true} />
             );
+          } else {
+            return <AllSmallRow key={`row_${index}`} items={chunk} />;
           }
         })}
       </ScrollView>

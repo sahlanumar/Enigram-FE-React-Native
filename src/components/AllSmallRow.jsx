@@ -17,7 +17,7 @@ const AllSmallRow = ({ items }) => {
 const styles = StyleSheet.create({
   rowContainer: {
     flexDirection: "row",
-    height: 125, // Tinggi baris ini lebih kecil dari baris campuran
+    height: 125, 
   },
 });
 
