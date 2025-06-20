@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 
-// Import komponen fitur
 import StoriesBar from "../components/StoriesBar";
 import PostCard from "../components/PostCard";
 
@@ -62,26 +61,16 @@ const HomeScreen = () => {
         paddingTop: StatusBar.currentHeight,
       }}
     >
-      <View style={styles.header}>
+      <View className="flex-row items-center justify-between border-b-[0.5px] border-b-gray-300 px-[15px] py-[10px]">
         <TouchableOpacity onPress={() => console.log("Kamera diklik!")}>
           <Icon name="camera-outline" size={28} color="#262626" />
         </TouchableOpacity>
-        <View style={styles.headerIcons}>
+        <View className="flex-row items-center space-x-5">
           <TouchableOpacity>
-            <Icon
-              name="add-circle-outline"
-              size={30}
-              color="#262626"
-              style={styles.icon}
-            />
+            <Icon name="add-circle-outline" size={30} color="#262626" />
           </TouchableOpacity>
           <TouchableOpacity>
-            <Icon
-              name="paper-plane-outline"
-              size={30}
-              color="#262626"
-              style={styles.icon}
-            />
+            <Icon name="paper-plane-outline" size={30} color="#262626" />
           </TouchableOpacity>
         </View>
       </View>
@@ -111,7 +100,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "#dbdbdb",
   },
   headerTitle: {
-    fontFamily: "Cochin", // Ganti dengan font kustom jika ada
+    fontFamily: "Cochin", 
     fontSize: 24,
     fontWeight: "bold",
   },

@@ -34,7 +34,7 @@ const GridRow = ({ items, reverse = false }) => {
 const styles = StyleSheet.create({
   rowContainer: {
     flexDirection: "row",
-    height: 250, // Atur tinggi baris sesuai keinginan
+    height: 250, 
   },
   smallItemsContainer: {
     flex: 1,

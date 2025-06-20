@@ -11,12 +11,12 @@ const GridItem = ({ item, style }) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 1, // Memberi sedikit jarak antar gambar
+    padding: 1,
   },
   image: {
     width: "100%",
     height: "100%",
-    borderRadius: 2, // Opsional: sudut sedikit melengkung
+    borderRadius: 2, 
   },
 });
 

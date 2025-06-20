@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     height: 70,
     borderRadius: 35,
     borderWidth: 2,
-    borderColor: "#c13584", // Warna gradien Instagram
+    borderColor: "#c13584", 
     justifyContent: "center",
     alignItems: "center",
   },

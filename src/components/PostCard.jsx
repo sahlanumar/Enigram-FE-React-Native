@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   optionsButton: {},
   postImage: {
     width: "100%",
-    aspectRatio: 1, // Persegi
+    aspectRatio: 1, 
   },
   actionsContainer: {
     flexDirection: "row",
