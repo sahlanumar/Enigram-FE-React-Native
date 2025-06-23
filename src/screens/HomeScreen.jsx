@@ -1,85 +1,182 @@
-import React from "react";
+import React, { useState, useEffect, useCallback, useContext } from "react";
 import {
   SafeAreaView,
   View,
-  Text,
   FlatList,
   StyleSheet,
   TouchableOpacity,
   StatusBar,
+  ActivityIndicator,
+  Text,
+  Alert,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
+import { useFocusEffect } from "@react-navigation/native";
+import * as ImagePicker from "expo-image-picker";
 
-import StoriesBar from "../components/StoriesBar";
-import PostCard from "../components/PostCard";
-
-// Data dummy untuk postingan feed
-const DUMMY_POSTS = [
-  {
-    id: "1",
-    username: "siti_aisyah",
-    location: "Jakarta, Indonesia",
-    userAvatar: "https://i.pravatar.cc/150?u=3",
-    postImage: "https://picsum.photos/id/1015/500/500",
-    likes: 1201,
-    commentCount: 42,
-    caption:
-      "Menikmati pemandangan dari atas! 🏞️ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. #travel #norway #nature",
-  },
-  {
-    id: "2",
-    username: "john.doe",
-    location: "Jakarta, Indonesia",
-    userAvatar: "https://i.pravatar.cc/150?u=4",
-    postImage: "https://picsum.photos/id/1025/500/500",
-    likes: 852,
-    commentCount: 42,
-    caption:
-      "Sahabat terbaikku! 🐶 🏞️ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. #travel #norway #nature",
-  },
-  {
-    id: "3",
-    username: "budi_iman",
-    location: "Jakarta, Indonesia",
-    userAvatar: "https://i.pravatar.cc/150?u=2",
-    postImage: "https://picsum.photos/id/237/500/500",
-    likes: 432,
-    commentCount: 42,
-    caption:
-      "Waktunya kopi pagi ☕️ #morning 🏞️ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. #travel #norway #nature",
-  },
-];
+import {
+  StoriesBar,
+  PostCard,
+  CommentsModal,
+  StoryViewerModal,
+} from "../components/home";
+import postService from "../../services/postService";
+import storyService from "../../services/storyService";
+import { AuthContext } from "../../context/AuthContext";
 
 const HomeScreen = () => {
-  const renderPost = ({ item }) => <PostCard post={item} />;
+  const { user: authUser } = useContext(AuthContext);
+  const [feed, setFeed] = useState([]);
+  const [stories, setStories] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [error, setError] = useState(null);
+  const [selectedPostId, setSelectedPostId] = useState(null);
+  const [viewingStory, setViewingStory] = useState(null); 
+
+  const transformData = (items) => {
+    return items.map((item) => ({
+      ...item,
+      user: {
+        username: item.username,
+        profile_picture_url: item.profile_picture_url,
+        is_verified: item.is_verified,
+      },
+    }));
+  };
+
+  const fetchData = async () => {
+    try {
+      setError(null);
+      const [feedResponse, storiesResponse] = await Promise.all([
+        postService.getFeed(),
+        storyService.getActiveStories(),
+      ]);
+      setFeed(transformData(feedResponse));
+
+      const transformedStories = transformData(storiesResponse);
+      const addStoryButton = {
+        id: "add-story-button",
+        type: "add",
+        user: authUser,
+      };
+      setStories([addStoryButton, ...transformedStories]);
+    } catch (err) {
+      setError(err.message || "Failed to fetch data");
+    } finally {
+      setIsLoading(false);
+      setIsRefreshing(false);
+    }
+  };
+
+  useEffect(() => {
+    if (authUser) fetchData();
+  }, [authUser]);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (authUser) fetchData();
+    }, [authUser])
+  );
+
+  const onRefresh = () => {
+    setIsRefreshing(true);
+    fetchData();
+  };
+
+  const handleCommentPress = (postId) => setSelectedPostId(postId);
+  const handleCloseCommentModal = () => setSelectedPostId(null);
+
+  const handleAddStory = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert(
+        "Permission Denied",
+        "Sorry, we need camera roll permissions to make this work!"
+      );
+      return;
+    }
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [9, 16],
+      quality: 0.8,
+    });
+
+    if (!result.canceled) {
+      const imageUrl = result.assets[0].uri;
+
+      try {
+        await storyService.createStory({ imageUrl });
+        Alert.alert("Success", "Your story has been added!");
+        fetchData(); 
+      } catch (error) {
+        console.error("Failed to add story:", error);
+        Alert.alert("Error", "Could not add your story. Please try again.");
+      }
+    }
+  };
+
+  const handleStoryPress = (story) => {
+    setViewingStory(story);
+  };
+
+  if (isLoading) {
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator size="large" color="#000" />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.center}>
+        <Text>Error: {error}</Text>
+      </View>
+    );
+  }
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: "#fff",
-        paddingTop: StatusBar.currentHeight,
-      }}
-    >
-      <View className="flex-row items-center justify-between border-b-[0.5px] border-b-gray-300 px-[15px] py-[10px]">
-        <TouchableOpacity onPress={() => console.log("Kamera diklik!")}>
-          <Icon name="camera-outline" size={28} color="#262626" />
-        </TouchableOpacity>
-        <View className="flex-row items-center space-x-5">
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Enigram</Text>
+        <View style={styles.headerIcons}>
           <TouchableOpacity>
             <Icon name="add-circle-outline" size={30} color="#262626" />
           </TouchableOpacity>
-          <TouchableOpacity>
-            <Icon name="paper-plane-outline" size={30} color="#262626" />
+          <TouchableOpacity style={{ marginLeft: 15 }}>
+            <Icon name="paper-plane-outline" size={28} color="#262626" />
           </TouchableOpacity>
         </View>
       </View>
       <FlatList
-        data={DUMMY_POSTS}
-        renderItem={renderPost}
-        keyExtractor={(item) => item.id}
-        ListHeaderComponent={<StoriesBar />}
+        data={feed}
+        renderItem={({ item }) => (
+          <PostCard post={item} onCommentPress={handleCommentPress} />
+        )}
+        keyExtractor={(item) => item.id.toString()}
+        ListHeaderComponent={
+          <StoriesBar
+            stories={stories}
+            onAddStoryPress={handleAddStory}
+            onStoryPress={handleStoryPress}
+          />
+        }
         showsVerticalScrollIndicator={false}
+        refreshing={isRefreshing}
+        onRefresh={onRefresh}
+      />
+      <CommentsModal
+        postId={selectedPostId}
+        isVisible={!!selectedPostId}
+        onClose={handleCloseCommentModal}
+      />
+      <StoryViewerModal
+        story={viewingStory}
+        isVisible={!!viewingStory}
+        onClose={() => setViewingStory(null)}
       />
     </SafeAreaView>
   );
@@ -89,7 +186,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+    paddingTop: StatusBar.currentHeight,
   },
+  center: { flex: 1, justifyContent: "center", alignItems: "center" },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -99,17 +198,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     borderBottomColor: "#dbdbdb",
   },
-  headerTitle: {
-    fontFamily: "Cochin", 
-    fontSize: 24,
-    fontWeight: "bold",
-  },
-  headerIcons: {
-    flexDirection: "row",
-  },
-  icon: {
-    marginLeft: 20,
-  },
+  headerTitle: { fontFamily: "Cochin", fontSize: 28, fontWeight: "bold" },
+  headerIcons: { flexDirection: "row", alignItems: "center" },
 });
 
 export default HomeScreen;
