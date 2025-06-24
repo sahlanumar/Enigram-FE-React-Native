@@ -19,7 +19,39 @@ const AddPostScreen = () => {
   const [location, setLocation] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleImagePick = async () => {
+  // Fungsi untuk menampilkan pilihan antara kamera dan galeri
+  const showImagePickerOptions = () => {
+    Alert.alert("Select Image", "Choose an option", [
+      { text: "Take Photo...", onPress: openCamera },
+      { text: "Choose from Library...", onPress: openGallery },
+      { text: "Cancel", style: "cancel" },
+    ]);
+  };
+
+  // Fungsi untuk membuka kamera
+  const openCamera = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert(
+        "Permission Denied",
+        "Camera access is needed to take a photo."
+      );
+      return;
+    }
+
+    const result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 5],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImageUri(result.assets[0].uri);
+    }
+  };
+
+  // Fungsi untuk membuka galeri
+  const openGallery = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
       Alert.alert(
@@ -55,14 +87,16 @@ const AddPostScreen = () => {
 
     setIsLoading(true);
     try {
+      // NOTE: Di aplikasi nyata, Anda akan mengunggah gambar ke server dan mendapatkan URL.
+      // Untuk demo ini, kita akan menggunakan URI lokal sebagai placeholder.
       await postService.createPost({
         imageUrl: imageUri,
         caption,
         location,
       });
       Alert.alert("Success", "Your post has been shared!");
-      resetForm(); 
-      navigation.navigate("Home"); 
+      resetForm();
+      navigation.navigate("Home");
     } catch (error) {
       console.error("Failed to create post:", error);
       Alert.alert("Error", "Could not share your post. Please try again.");
@@ -93,7 +127,8 @@ const AddPostScreen = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <ImageSelector imageUri={imageUri} onPress={handleImagePick} />
+      {/* onPress sekarang memanggil fungsi untuk menampilkan pilihan */}
+      <ImageSelector imageUri={imageUri} onPress={showImagePickerOptions} />
       <PostInput
         placeholder="Write a caption..."
         value={caption}
