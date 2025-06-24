@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
-import postService from "../../services/postService";
+import postService from "../services/postService";
 import { ImageSelector, PostInput } from "../components/addPost";
 
 const AddPostScreen = () => {

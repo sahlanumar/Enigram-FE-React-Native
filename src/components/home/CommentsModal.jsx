@@ -13,7 +13,7 @@ import {
   Platform,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
-import postService from "../../../services/postService";
+import postService from "../../services/postService";
 
 const CommentItem = ({ comment }) => (
   <View style={styles.commentContainer}>

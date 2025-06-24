@@ -11,8 +11,8 @@ import {
   StatusBar,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
-import { AuthContext } from "../../context/AuthContext";
-import userService from "../../services/userService";
+import { AuthContext } from "../context/AuthContext";
+import userService from "../services/userService";
 
 import {
   ProfileHeader,

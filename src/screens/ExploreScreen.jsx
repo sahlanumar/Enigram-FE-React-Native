@@ -6,9 +6,10 @@ import {
   View,
   ActivityIndicator,
   Text,
+  StatusBar,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import postService from "../../services/postService";
+import postService from "../services/postService";
 import {
   SearchBar,
   GridRow,
@@ -163,6 +164,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+    paddingTop: StatusBar.currentHeight,
   },
   center: {
     flex: 1,

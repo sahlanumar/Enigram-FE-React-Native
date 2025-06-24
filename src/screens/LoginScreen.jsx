@@ -9,7 +9,7 @@ import {
   Platform,
   ScrollView,
 } from "react-native";
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext } from "../context/AuthContext";
 import { AuthInput, AuthButton } from "../components/auth";
 import { useNavigation } from "@react-navigation/native";
 

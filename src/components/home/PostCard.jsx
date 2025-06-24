@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
-import postService from "../../../services/postService";
+import postService from "../../services/postService";
 
 const PostCard = ({ post, onCommentPress }) => {
   const [isExpanded, setIsExpanded] = useState(false);

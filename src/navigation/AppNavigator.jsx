@@ -4,8 +4,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { AuthContext } from "../context/AuthContext";
 import AuthNavigator from "./AuthNavigator";
 import BottomTabNavigator from "./BottomTabNavigator";
-import SplashScreen from "../src/screens/SplashScreen";
-import PostDetailScreen from "../src/screens/PostDetailScreen"; 
+import SplashScreen from "../screens/SplashScreen";
+import PostDetailScreen from "../screens/PostDetailScreen"; 
 
 const Stack = createNativeStackNavigator();
 

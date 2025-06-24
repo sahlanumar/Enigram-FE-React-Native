@@ -8,7 +8,7 @@ import {
   Alert,
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
-import postService from "../../services/postService";
+import postService from "../services/postService";
 import { PostCard } from "../components/home"; 
 
 const PostDetailScreen = () => {

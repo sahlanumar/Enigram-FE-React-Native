@@ -20,9 +20,9 @@ import {
   CommentsModal,
   StoryViewerModal,
 } from "../components/home";
-import postService from "../../services/postService";
-import storyService from "../../services/storyService";
-import { AuthContext } from "../../context/AuthContext";
+import postService from "../services/postService";
+import storyService from "../services/storyService";
+import { AuthContext } from "../context/AuthContext";
 
 const HomeScreen = () => {
   const { user: authUser } = useContext(AuthContext);

@@ -3,11 +3,11 @@ import { StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 
-import HomeScreen from "../src/screens/HomeScreen";
-import ExploreScreen from "../src/screens/ExploreScreen";
-import ReelsScreen from "../src/screens/ReelsScreen";
-import AddPostScreen from "../src/screens/AddPostScreen";
-import ProfileScreen from "../src/screens/ProfileScreen";
+import HomeScreen from "../screens/HomeScreen";
+import ExploreScreen from "../screens/ExploreScreen";
+import ReelsScreen from "../screens/ReelsScreen";
+import AddPostScreen from "../screens/AddPostScreen";
+import ProfileScreen from "../screens/ProfileScreen";
 
 const Tab = createBottomTabNavigator();
 
